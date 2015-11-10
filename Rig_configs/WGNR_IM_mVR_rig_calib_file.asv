@@ -51,8 +51,8 @@ rig_config.dio_trial_ephys_trig = '8';
 
 % Ball tracker calibration values
 %rig_config.A_calib_str = '{{-0.1331, -7.7882, 0.1671, 0.0856}, {0.1133, 0.1117, 0.2213, 8.1600}, {-4.0722, 0, -4.4783, 0}}'; % Ball motion calibration matrix
-rig_config.A_calib_str = '{{0, 5.5, 0, 0}, {0, 0, 0, 5.5}, {-2.75, 0, -2.75, 0}}';
-rig_config.zero_V_str = '{2.538, 2.542, 2.554, 2.538}';
+rig_config.A_calib_str = '{{0.0, 3.6800, -0.1950, 0.5200}, {0.2250, 0.0100, -0.1650, 8.5900}, {-2.5333, 0, -1.5867, 0.6000}}';
+rig_config.zero_V_str = '{2.54, 2.54, 2.55, 2.54}';
 rig_config.step_V = 0.154;
 
 % General parameters

@@ -36,8 +36,8 @@ replace    = ['const unsigned scim_logging_chan = ', rig_config.ai_channels_scim
 expression =  'const unsigned maze_num_ao_chan = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
 replace    = ['const unsigned maze_num_ao_chan = ', rig_config.ao_channels_maze_num ,';'];     text = regexprep(text,expression,replace);
 
-expression =  'const unsigned synch_ao_chan = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
-replace    = ['const unsigned synch_ao_chan = ', rig_config.ao_channels_synch ,';'];     text = regexprep(text,expression,replace);
+expression =  'const unsigned c_wall_rot_ao_chan = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
+replace    = ['const unsigned c_wall_rot_ao_chan = ', rig_config.ao_channels_c_wall_rot ,';'];     text = regexprep(text,expression,replace);
 
 expression =  'const unsigned iti_ao_chan = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
 replace    = ['const unsigned iti_ao_chan = ', rig_config.ao_channels_iti ,';'];     text = regexprep(text,expression,replace);
@@ -94,8 +94,8 @@ replace    = ['const unsigned sound_cue_trig = ', rig_config.dio_sound_cue ,';']
 expression =  'const double maze_num_ao_offset = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
 replace    = ['const double maze_num_ao_offset = ', num2str(rig_config.ao_offsets(str2num(rig_config.ao_channels_maze_num)+1)) ,';'];     text = regexprep(text,expression,replace);
 
-expression =  'const double synch_ao_offset = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
-replace    = ['const double synch_ao_offset = ', num2str(rig_config.ao_offsets(str2num(rig_config.ao_channels_synch)+1)) ,';'];     text = regexprep(text,expression,replace);
+expression =  'const double c_wall_rot_ao_offset = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
+replace    = ['const double c_wall_rot_ao_offset = ', num2str(rig_config.ao_offsets(str2num(rig_config.ao_channels_c_wall_rot)+1)) ,';'];     text = regexprep(text,expression,replace);
 
 expression =  'const double iti_ao_offset = (\W*)(\w*)(\W*)(\w*);'; %replace expressions of format [sign][digits][decimal][digits]
 replace    = ['const double iti_ao_offset = ', num2str(rig_config.ao_offsets(str2num(rig_config.ao_channels_iti)+1)) ,';'];     text = regexprep(text,expression,replace);

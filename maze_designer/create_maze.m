@@ -10,13 +10,13 @@ maze.initial.branch_fraction = 0.5;
 maze.start_wall_left = -15;
 maze.start_wall_right = 15;
 
-maze.default_reward_patch = [.1 .9, .2 .8]; %left right, back forward
+maze.default_reward_patch = [.1 .9, 0.5, 1]; %left right, back forward
 maze.reward_size = 1;
 maze.screen_on = 9999;
 
 maze.initial.corridor_frac = 0.5;
 maze.center_width = 15;
-maze.dead_end_width = 15;
+maze.dead_end_width = 30;
 maze.max_wall_for_pos = 30;
 
 if maze.initial.branch_id > maze.num_branches || isnan(start_branch) || maze.initial.branch_id <= 0
@@ -37,10 +37,10 @@ for ij = 1:maze.num_branches
     maze.left_angle(ij) = dat{ij,2};
     maze.right_angle(ij) = dat{ij,3};
     maze.left_end(ij) = dat{ij,4};
-    if dat{ij,4} == 0 || dat{ij,5} == 0
-        dat{ij,4} = 0;
-        dat{ij,5} = 0;
-    end
+%     if dat{ij,4} == 0 || dat{ij,5} == 0
+%         dat{ij,4} = 0;
+%         dat{ij,5} = 0;
+%     end
     maze.right_end(ij) = dat{ij,5};
     maze.reward_branch(ij) = dat{ij,6};
     maze.split_branch(ij) = maze.left_end(ij) ~= maze.right_end(ij);
@@ -60,7 +60,6 @@ for ij = 1:maze.num_branches
         init_left = [maze.start_wall_left 0];
         init_right = [maze.start_wall_right 0];
     else
-        
         % make sure each branch gets assigned correct parent node
         left_parent_branch = find(maze.left_end(:,1) == ij);
         right_parent_branch = find(maze.right_end(:,1) == ij);
@@ -77,7 +76,7 @@ for ij = 1:maze.num_branches
             init_right = (maze.right_wall_traj(maze.parent_branch(ij),3:4)+maze.left_wall_traj(maze.parent_branch(ij),3:4))/2;
             init_right(1) = init_right(1) - maze.center_width/2;
         elseif left_parent_branch == right_parent_branch
-            maze.parent_branch(ij) = right_parent_branch;
+            maze.parent_branch(ij) = right_parent_branch(1);
             init_left = maze.left_wall_traj(maze.parent_branch(ij),3:4);
             init_right = maze.right_wall_traj(maze.parent_branch(ij),3:4);
         else
@@ -96,31 +95,31 @@ for ij = 1:maze.num_branches
         dat{ij,1} = ideal_length;
     end
     
-    if maze.left_end(ij) == 0 || maze.right_end(ij) == 0 && maze.split_branch(maze.parent_branch(ij)) == 0
-        cur_width = init_right(1)-init_left(1);
-        end_width = maze.dead_end_width;
-        orig_ang = (maze.left_angle(maze.parent_branch(ij)) + maze.right_angle(maze.parent_branch(ij)))/2;
-        maze.length(ij) = maze.max_wall_for_pos/maze.wall_gain;
-        lat_displacement = tand(orig_ang)*maze.length(ij)*maze.wall_gain;
-        maze.left_angle(ij) = 90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2+lat_displacement);
-        maze.right_angle(ij) = -(90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2-lat_displacement));
-        dat{ij,1} = maze.length(ij);
-        dat{ij,2} = maze.left_angle(ij);
-        dat{ij,3} = maze.right_angle(ij);
-    end
-    
-    if maze.left_end(ij) == 0 || maze.right_end(ij) == 0 && maze.split_branch(maze.parent_branch(ij)) == 1
-        cur_width = init_right(1)-init_left(1);
-        end_width = maze.dead_end_width;
-        orig_ang = (maze.left_angle(maze.parent_branch(ij)) + maze.right_angle(maze.parent_branch(ij)))/2;
-        maze.length(ij) = 14;
-        lat_displacement = tand(orig_ang)*maze.length(ij)*maze.wall_gain;
-        maze.left_angle(ij) = 90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2+lat_displacement);
-        maze.right_angle(ij) = -(90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2-lat_displacement));
-        dat{ij,1} = maze.length(ij);
-        dat{ij,2} = maze.left_angle(ij);
-        dat{ij,3} = maze.right_angle(ij);
-    end
+%     if maze.left_end(ij) == 0 || maze.right_end(ij) == 0 && maze.split_branch(maze.parent_branch(ij)) == 0
+%         %cur_width = init_right(1)-init_left(1);
+%         %end_width = maze.dead_end_width;
+%         %orig_ang = (maze.left_angle(maze.parent_branch(ij)) + maze.right_angle(maze.parent_branch(ij)))/2;
+%         maze.length(ij) = maze.max_wall_for_pos/maze.wall_gain;
+%         %lat_displacement = tand(orig_ang)*maze.length(ij)*maze.wall_gain;
+%         %maze.left_angle(ij) = 90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2+lat_displacement);
+%         %maze.right_angle(ij) = -(90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2-lat_displacement));
+%         dat{ij,1} = maze.length(ij);
+%         %dat{ij,2} = maze.left_angle(ij);
+%         %dat{ij,3} = maze.right_angle(ij);
+%     end
+%     
+%     if maze.left_end(ij) == 0 || maze.right_end(ij) == 0 && maze.split_branch(maze.parent_branch(ij)) == 1
+%         %cur_width = init_right(1)-init_left(1);
+%         %end_width = maze.dead_end_width;
+%         %orig_ang = (maze.left_angle(maze.parent_branch(ij)) + maze.right_angle(maze.parent_branch(ij)))/2;
+%         maze.length(ij) = 14;
+%         %lat_displacement = tand(orig_ang)*maze.length(ij)*maze.wall_gain;
+%         %maze.left_angle(ij) = 90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2+lat_displacement);
+%         %maze.right_angle(ij) = -(90-180/pi*atan2(maze.length(ij)*maze.wall_gain,(cur_width - end_width)/2-lat_displacement));
+%         dat{ij,1} = maze.length(ij);
+%         %dat{ij,2} = maze.left_angle(ij);
+%         %dat{ij,3} = maze.right_angle(ij);
+%     end
 
     traj_add = NaN(1,2);
     traj_add(1) = maze.wall_gain*tand(maze.left_angle(ij))*maze.length(ij);

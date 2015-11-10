@@ -34,9 +34,11 @@ reward_params.tform = [];
 for ij = 1:maze.num_branches
 	% plot reward patches
 	if maze.reward_branch(ij)
+			%reward_patch = [maze.default_reward_patch(1:2) maze.default_reward_patch(2) maze.default_reward_patch(1) maze.default_reward_patch(3) maze.default_reward_patch(3) maze.default_reward_patch(4) maze.default_reward_patch(4)];
+			%reward_patch = [maze.default_reward_patch(3:4) maze.default_reward_patch(3) maze.default_reward_patch(4) maze.default_reward_patch(1) maze.default_reward_patch(1) maze.default_reward_patch(2) maze.default_reward_patch(2)];
+            %reward_patch =  [0.1000    0.9000    0.9000    0.1000         0         0    1.0000    1.0000]
+            reward_patch =  [0    1    0.9000    0.1000         0         0    1.0000    1.0000]
 
-            reward_patch = [maze.default_reward_patch(3:4) maze.default_reward_patch(4) maze.default_reward_patch(3) maze.default_reward_patch(1) maze.default_reward_patch(1) maze.default_reward_patch(2) maze.default_reward_patch(2)];
-            
             end_vals = NaN(4,2);
             for ik = 1:4
 				[init_x init_y] = maze_coordinate_transform(maze,ij,reward_patch(ik),reward_patch(ik+4));

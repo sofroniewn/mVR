@@ -83,23 +83,25 @@ const unsigned scim_logging_chan = 0; /* Lick signal*/
 
 /* Analog output channels */
 const unsigned maze_num_ao_chan = 0; /* maze number */
-const unsigned synch_ao_chan = 0; /* synch channel at 500 Hz */
+/*const unsigned synch_ao_chan = 0; /* synch channel at 500 Hz */
 const unsigned iti_ao_chan = 0; /* AO intertrial trig  */
 const unsigned l_wall_lat_ao_chan = 0; /* left wall lateral position */
 const unsigned c_wall_for_ao_chan = 0; /* left wall forward position */
 const unsigned c_wall_lat_ao_chan = 0; /* right wall lateral position */
 const unsigned r_wall_lat_ao_chan = 0; /* right wall lateral position */
+const unsigned c_wall_rot_ao_chan = 0; /* synch channel at 500 Hz */
 const unsigned maze_for_ao_chan = 0; /* forward position of mouse */
 const unsigned maze_lat_ao_chan = 0; /* lateral position of mouse */
 
 /* Analog output channel offsets */
 const double maze_num_ao_offset = 0;
-const double synch_ao_offset = 0;
+/*const double synch_ao_offset = 0;*/
 const double iti_ao_offset = 0;
 const double l_wall_lat_ao_offset = 0;
 const double c_wall_for_ao_offset = 0;
 const double c_wall_lat_ao_offset = 0;
 const double r_wall_lat_ao_offset = 0;
+const double c_wall_rot_ao_offset = 0;
 const double maze_for_ao_offset = 0;
 const double maze_lat_ao_offset = 0;
 
@@ -144,7 +146,7 @@ const double update_scale = 2;
 const double sound_on_length = 0;
 
 const double branch_compensate_dist = 7; /* split_child >= 9, split >=31, split ~= dead_end ~= split_child */
-const double offset_dist = 3;
+const double offset_dist = 8;
 
 double dist_thresh = 0;
 
@@ -230,8 +232,6 @@ double maze_lat_cord;
 double update_dist = 0;
 double time_frac = 0;
 double c_lat_dist;
-double c_lat_pos_mid;
-double c_lat_pos_top;
 double maze_start_dist = 0;
 
 
@@ -268,13 +268,11 @@ double log_maze_cord;
 /***********************************/
 /* Wall Calibration Function*/
 double wall_mm_to_vlt(double x) {
-    if (x<0) {
-        x = 0;
-    }
-    if (x>40) {
-        x = 40;
-    }
-    return (x-20)/2.22;
+    return (x-24)/2.5;
+}
+
+double wall_mm_to_vlt_for(double x) {
+    return (x-20)/2.5;
 }
 
 double wall_ang_to_vlt(double x) {
@@ -284,7 +282,7 @@ double wall_ang_to_vlt(double x) {
     if (x>90) {
         x = 90;
     }
-    return (x+90)/180*5;
+    return (5-(x+90)/180*5)*.85;
 }
 
 /***********************************/
@@ -456,6 +454,7 @@ void tick_func(void) {
                 }
                 correct = 0;
                 dead_end = 0;
+                c_dead_end = 0;
                 gain_val = maze_wall_gain[cur_trial_num];
                 
                 if (maze_end_reached == 1 && session_continuous_world == 1) {
@@ -846,6 +845,7 @@ void tick_func(void) {
                         c_lat_pos = cor_pos - cor_width/2 - update_dist/2;
                         l_lat_pos = cor_width - cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
                         c_for_pos = 0;
+                        c_dead_end = 0;
                     } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
                         /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
                         c_ang_pos = 90*(2 - cur_branch_dist/branch_compensate_dist);
@@ -853,12 +853,14 @@ void tick_func(void) {
                         c_lat_pos = cor_pos - cor_width/2 - update_dist/2*(2 - cur_branch_dist/branch_compensate_dist);
                         l_lat_pos = cor_width - cor_pos + offset_dist*(2 - cur_branch_dist/branch_compensate_dist);
                         c_for_pos = 0;
+                        c_dead_end = 1;
                     } else {
                         c_ang_pos = 0;
                         r_lat_pos = cor_pos;
                         l_lat_pos = cor_width - cor_pos;
                         c_lat_pos = cor_pos - cor_width/2;
                         c_for_pos = 0;
+                        c_dead_end = 1;
                     }
                 } else if (split_child == 2) {
                     /* if in right child of split branch */
@@ -869,7 +871,6 @@ void tick_func(void) {
                         c_lat_pos = cor_pos - cor_width/2 - update_dist/2;
                         l_lat_pos = cor_width - cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
                         c_for_pos = 0;
-                        c_dead_end = 0;
                     } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
                         /* move rotated center wall away from mouse */
                         c_ang_pos = 90;
@@ -877,7 +878,6 @@ void tick_func(void) {
                         c_lat_pos = cor_pos - cor_width/2 - update_dist/2;
                         l_lat_pos = cor_width - cor_pos + offset_dist;
                         c_for_pos = max_wall_for_pos*(cur_branch_dist/branch_compensate_dist - 1);
-                        c_dead_end = 1;
                     } else if (cur_branch_dist >= branch_compensate_dist*2 && cur_branch_dist < branch_compensate_dist*3) {
                         /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
                         c_ang_pos = 90*(3 - cur_branch_dist/branch_compensate_dist);
@@ -885,7 +885,6 @@ void tick_func(void) {
                         c_lat_pos = cor_pos - cor_width/2 - update_dist/2*(3 - cur_branch_dist/branch_compensate_dist);
                         l_lat_pos = cor_width - cor_pos + offset_dist*(3 - cur_branch_dist/branch_compensate_dist);
                         c_for_pos = max_wall_for_pos;
-                        c_dead_end = 1;
                     } else {
                         c_ang_pos = 0;
                         r_lat_pos = cor_pos;
@@ -990,24 +989,14 @@ void tick_func(void) {
                 c_lat_pos = -max_wall_pos;
             }
             
-            if (c_lat_pos > max_wall_pos/2) {
-                c_lat_pos_mid = max_wall_pos/2;
-                c_lat_pos_top = c_lat_pos - max_wall_pos/2;
-            } else if (c_lat_pos <= max_wall_pos/2 && c_lat_pos > -max_wall_pos/2){
-                c_lat_pos_mid = c_lat_pos;
-                c_lat_pos_top = 0;
-            } else {
-                c_lat_pos_mid = -max_wall_pos/2;
-                c_lat_pos_top = c_lat_pos + max_wall_pos/2;
-            }
             
             /* Send AO for wall position */
-            writeAO(c_wall_lat_ao_chan, c_wall_lat_ao_offset  + wall_mm_to_vlt(max_wall_pos/2 + c_lat_pos_mid));
-            writeAO(maze_num_ao_chan, maze_num_ao_offset + wall_mm_to_vlt(max_wall_pos/2 + c_lat_pos_top));
+            writeAO(c_wall_lat_ao_chan, c_wall_lat_ao_offset  + c_lat_pos/2.5/2);
             writeAO(r_wall_lat_ao_chan, r_wall_lat_ao_offset + wall_mm_to_vlt(r_lat_pos));
-            writeAO(c_wall_for_ao_chan, c_wall_for_ao_offset  + wall_mm_to_vlt(c_for_pos));
+            writeAO(c_wall_for_ao_chan, c_wall_for_ao_offset  + wall_mm_to_vlt_for(c_for_pos));
             writeAO(l_wall_lat_ao_chan, l_wall_lat_ao_offset + wall_mm_to_vlt(l_lat_pos));
-            writeAO(maze_for_ao_chan, maze_for_ao_offset  + wall_ang_to_vlt(c_ang_pos));
+            writeAO(c_wall_rot_ao_chan, c_wall_rot_ao_offset + wall_ang_to_vlt(c_ang_pos)); 
+            writeAO(maze_num_ao_chan, maze_num_ao_offset + 0);
             
             /* Check bounds and output AO for forward, lateral maze cords */
             if (maze_for_cord > 199) {
@@ -1022,7 +1011,7 @@ void tick_func(void) {
             if (maze_lat_cord < -100) {
                 maze_lat_cord = -100;
             }
-            /*writeAO(maze_for_ao_chan, maze_for_ao_offset  + maze_for_to_vlt(maze_for_cord));*/
+            writeAO(maze_for_ao_chan, maze_for_ao_offset  + maze_for_to_vlt(maze_for_cord));
             writeAO(maze_lat_ao_chan, maze_lat_ao_offset + maze_lat_to_vlt(maze_lat_cord));
             
             if (c_dead_end){
@@ -1116,7 +1105,7 @@ void tick_func(void) {
             
             /* Sync pulse */
             writeDIO(synch_pulse, 1);
-            writeAO(synch_ao_chan, synch_ao_offset + 5);
+            /*writeAO(synch_ao_chan, synch_ao_offset + 5);*/
             led_pulse_on = 0;
             
             scim_logging_ai_vlt = readAI(scim_logging_chan);
@@ -1136,7 +1125,9 @@ void tick_func(void) {
             /*log_maze_cord = floor(5*maze_for_cord) + 1000*floor(5*maze_lat_cord+500);*/
             log_maze_cord = round(20*cur_branch_dist) + 1000*cur_branch + 100000*0;
             
-            /* log_cor_pos = cam_vel_ai_vlt[0]*1000;*/
+            /*log_wall_pos = cam_vel_ai_vlt[0]*1000;*/
+            /*log_wall_pos = (lick_in_vlt+10)*1000;*/
+            
             logValue("m", log_maze_cord);    /* stim code */
             logValue("b", log_ball_motion); /* ball_motion_vector code */
             logValue("w", log_wall_pos);       /* wall pos */
@@ -1153,7 +1144,7 @@ void tick_func(void) {
                 if (led_pulse_on > 2){
                     writeDIO(wv_trig, 0);
                     writeDIO(synch_pulse, 0);
-                    writeAO(synch_ao_chan, synch_ao_offset);
+                    /*writeAO(synch_ao_chan, synch_ao_offset);*/
                 }
             } else if (ball_tracker_clock_ai_vlt < ai_threshold) {
                 ball_tracker_clock_low_flag = 1;
@@ -1191,24 +1182,25 @@ void tick_func(void) {
         if (c_for_pos < 0) {
             c_for_pos = 0;
         }
-        if (c_lat_pos > max_wall_pos/2) {
-            c_lat_pos = max_wall_pos/2;
+        if (c_lat_pos > max_wall_pos) {
+            c_lat_pos = max_wall_pos;
         }
-        if (c_lat_pos <  -max_wall_pos/2) {
-            c_lat_pos =  -max_wall_pos/2;
+        if (c_lat_pos <  -max_wall_pos) {
+            c_lat_pos =  -max_wall_pos;
         }
         
-        writeAO(c_wall_lat_ao_chan, c_wall_lat_ao_offset  + wall_mm_to_vlt(max_wall_pos/2 + c_lat_pos));
+        writeAO(c_wall_lat_ao_chan, c_wall_lat_ao_offset  + c_lat_pos/2.5/2);
         writeAO(r_wall_lat_ao_chan, r_wall_lat_ao_offset + wall_mm_to_vlt(r_lat_pos));
-        writeAO(c_wall_for_ao_chan, c_wall_for_ao_offset  + wall_mm_to_vlt(c_for_pos));
+        writeAO(c_wall_for_ao_chan, c_wall_for_ao_offset  + wall_mm_to_vlt_for(c_for_pos));
         writeAO(l_wall_lat_ao_chan, l_wall_lat_ao_offset + wall_mm_to_vlt(l_lat_pos));
-        
+        writeAO(c_wall_rot_ao_chan, c_wall_rot_ao_offset + wall_ang_to_vlt(c_ang_pos)); 
+       
         writeAO(maze_num_ao_chan, maze_num_ao_offset);
-        writeAO(maze_for_ao_chan,  maze_for_ao_offset  + wall_ang_to_vlt(c_ang_pos));
+        writeAO(maze_for_ao_chan,  maze_for_ao_offset);
         writeAO(maze_lat_ao_chan, maze_lat_ao_offset);
         
         writeAO(iti_ao_chan, iti_ao_offset);
-        writeAO(synch_ao_chan, synch_ao_offset);
+        /*writeAO(synch_ao_chan, synch_ao_offset);*/
         
         writeDIO(water_valve_trig, 0);
         writeDIO(wv_trig, 0);
@@ -1252,17 +1244,18 @@ void init_func(void) {
         water_trig_on[ii] = 0;
     }
 
-    writeAO(c_wall_lat_ao_chan, c_wall_lat_ao_offset  + wall_mm_to_vlt(max_wall_pos/2 + c_lat_pos));
+    writeAO(c_wall_lat_ao_chan, c_wall_lat_ao_offset  + c_lat_pos/2.5/2);
     writeAO(r_wall_lat_ao_chan, r_wall_lat_ao_offset + wall_mm_to_vlt(r_lat_pos));
-    writeAO(c_wall_for_ao_chan, c_wall_for_ao_offset  + wall_mm_to_vlt(c_for_pos));
+    writeAO(c_wall_for_ao_chan, c_wall_for_ao_offset  + wall_mm_to_vlt_for(c_for_pos));
     writeAO(l_wall_lat_ao_chan, l_wall_lat_ao_offset + wall_mm_to_vlt(l_lat_pos));
+    writeAO(c_wall_rot_ao_chan, c_wall_rot_ao_offset + wall_ang_to_vlt(c_ang_pos)); 
     
     writeAO(maze_num_ao_chan, maze_num_ao_offset);
-    writeAO(maze_for_ao_chan, maze_for_ao_offset  + wall_ang_to_vlt(c_ang_pos));
+    writeAO(maze_for_ao_chan, maze_for_ao_offset);
     writeAO(maze_lat_ao_chan, maze_lat_ao_offset);
     
     writeAO(iti_ao_chan, iti_ao_offset);
-    writeAO(synch_ao_chan, synch_ao_offset);
+    /*writeAO(synch_ao_chan, synch_ao_offset);*/
     
     writeDIO(water_valve_trig, 0);
     writeDIO(wv_trig, 0);

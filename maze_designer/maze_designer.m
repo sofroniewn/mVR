@@ -137,7 +137,6 @@ function edit_remove_branch_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of edit_remove_branch as text
 %        str2double(get(hObject,'String')) returns contents of edit_remove_branch as a double
 
-pushbutton_remove_branch_Callback(hObject, eventdata, handles)
 
 % --- Executes during object creation, after setting all properties.
 function edit_remove_branch_CreateFcn(hObject, eventdata, handles)

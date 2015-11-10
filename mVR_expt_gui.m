@@ -75,10 +75,10 @@ cd(rig_config.base_dir)
 % addpath(fullfile('.','accessory_fns','plot_functions','histogram_plots'));
 
 handles.A_inv = rig_config.A_inv;
-handles.trial_mat_names = {'xSpeed','ySpeed','corPos','corWidth','xMazeCord','yMazeCord', ...
+handles.names = {'xSpeed','ySpeed','corPos','corWidth','xMazePos','yMazePos', ...
     'screenOn','rEnd','lEnd','lickState','trialWater','extWater', ...
-    'trialID','itiPeriod','scimState','scimLogging','curBranchDist','curBranchId'};
-handles.iti_ind = find(strcmp(handles.trial_mat_names,'itiPeriod'));
+    'trialType','itiPeriod','scimState','scimLogging','curBranchDist','curBranchId','trialNum'};
+handles.iti_ind = find(strcmp(handles.names,'itiPeriod'));
 
 % Load trial configuration file
 load_maze_config_Callback(handles.load_maze_config, eventdata, handles);
@@ -307,7 +307,7 @@ switch get(hObject,'value')
         % Reset GUI for logging
         trial_info.trial_num = 1;
         trial_info.iti_end = 1;
-        trial_info.trial_mat = [];
+        trial_info.data_mat = [];
         set(handles.text_num_trials,'UserData',trial_info);
         
         % Reset strings
@@ -423,12 +423,18 @@ switch get(hObject,'value')
         str_animal_number = get(handles.edit_animal_number,'String');
         str_run_number = get(handles.edit_run_number,'String');
         folder_name = fullfile(rig_config.data_dir,['anm_0' str_animal_number],['20' str_date(1:2) '_' str_date(3:4) '_' str_date(5:6)],['run_' str_run_number],'behaviour');
-        file_id_name = ['anm_0',str_animal_number,'_20' str_date(1:2) 'x' str_date(3:4) 'x' str_date(5:6) '_run_',str_run_number,'_'];
+        %file_id_name = ['anm_0',str_animal_number,'_20' str_date(1:2) 'x' str_date(3:4) 'x' str_date(5:6) '_run_',str_run_number,'_'];
+        file_id_name = [filesep];
         fname_base = fullfile(folder_name,file_id_name);
         fname_log = [fname_base 'log.txt'];
         fname_globals = [fname_base rig_config.globals_name];
         handles.fname_base = fname_base;
-                   
+        info = [];
+        info.anm = str_animal_number;
+        info.date = str_date;
+        info.run = str_run_number;
+        
+       
         % Get globals file name
         fileIn = fullfile('.','globals',rig_config.globals_name);
         fileOut = fullfile('.','globals',[rig_config.globals_name(1:end-2) '_used.c']);
@@ -480,7 +486,7 @@ switch get(hObject,'value')
             copyfile(fileOut,fname_globals);
             % delete(fileOut);
             save([fname_base 'rig_config.mat'],'rig_config');
-            save([fname_base 'trial_config.mat'],'maze_config','maze_array','trial_vars');
+            save([fname_base 'maze_config.mat'],'maze_config','maze_array','trial_vars');
             fid = fopen(fname_log,'w'); % Open text file on Windows Machine for saving values
             if fid == -1
                 error('File Not Created')
@@ -502,6 +508,7 @@ switch get(hObject,'value')
             copyfile(fileOut,stream_fname_globals);
             save([stream_fname_base 'rig_config.mat'],'rig_config');
             save([stream_fname_base 'trial_config.mat'],'maze_config','maze_array','trial_vars');
+            save([stream_fname_base 'info.mat'],'info');
         end
 
 
