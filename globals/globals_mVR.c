@@ -537,7 +537,7 @@ void tick_func(void) {
                             d_right_child = d_left_child;
                         }
                         if (d_right_child < d_end_child){
-                            d_end_child = d_right_child
+                            d_end_child = d_right_child;
                         }
                         c_for_pos_target = d_end + d_end_child;
                     } else if (cur_branch_lat_frac < (branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])) {                
@@ -560,7 +560,7 @@ void tick_func(void) {
                             d_right_child = d_left_child;
                         }
                         if (d_right_child < d_end_child){
-                            d_end_child = d_right_child
+                            d_end_child = d_right_child;
                         }
                         c_for_pos_target = d_end + d_end_child;
                     else {
@@ -575,7 +575,7 @@ void tick_func(void) {
                         d_right = d_left;
                     }
                     if (d_right < d_end){
-                        d_end = d_right
+                        d_end = d_right;
                     }
                     c_for_pos_target = d_end;
                 } else {
@@ -584,7 +584,7 @@ void tick_func(void) {
                         d_right = d_left;
                     }
                     if (d_right < d_end){
-                        c_for_pos_target = d_right
+                        c_for_pos_target = d_right;
                     } else {
                         child_branch = branch_left_end[cur_trial_num][cur_branch];
                         if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
@@ -604,7 +604,7 @@ void tick_func(void) {
                             d_right_child = d_left_child;
                         }
                         if (d_right_child < d_end_child){
-                            d_end_child = d_right_child
+                            d_end_child = d_right_child;
                         }
                         c_for_pos_target = d_end + d_end_child;
                     }
@@ -785,7 +785,7 @@ void tick_func(void) {
                             d_right_child = d_left_child;
                         }
                         if (d_right_child < d_end_child){
-                            d_end_child = d_right_child
+                            d_end_child = d_right_child;
                         }
                         c_for_pos = d_end + d_end_child;
                     } else if (cur_branch_lat_frac < (branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])) {                
@@ -808,7 +808,7 @@ void tick_func(void) {
                             d_right_child = d_left_child;
                         }
                         if (d_right_child < d_end_child){
-                            d_end_child = d_right_child
+                            d_end_child = d_right_child;
                         }
                         c_for_pos = d_end + d_end_child;
                     else {
@@ -823,7 +823,7 @@ void tick_func(void) {
                         d_right = d_left;
                     }
                     if (d_right < d_end){
-                        d_end = d_right
+                        d_end = d_right;
                     }
                     c_for_pos = d_end;
                 } else {
@@ -832,7 +832,7 @@ void tick_func(void) {
                         d_right = d_left;
                     }
                     if (d_right < d_end){
-                        c_for_pos = d_right
+                        c_for_pos = d_right;
                     } else {
                         child_branch = branch_left_end[cur_trial_num][cur_branch];
                         if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
@@ -852,7 +852,7 @@ void tick_func(void) {
                             d_right_child = d_left_child;
                         }
                         if (d_right_child < d_end_child){
-                            d_end_child = d_right_child
+                            d_end_child = d_right_child;
                         }
                         c_for_pos = d_end + d_end_child;
                     }
