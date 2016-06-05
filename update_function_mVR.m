@@ -95,8 +95,8 @@ if isempty(varLog) == 0 && update_display_on == 1
     data_mat(6,:) = branch_r_lat_start + gain_val.*data_mat(17,:).*tand(right_angle) - data_mat(3,:); % latMaze coordinate
 
     % if in iti set them to 0
-    data_mat(5,find(data_mat(14,:))) = NaN;
-    data_mat(6,find(data_mat(14,:))) = NaN;
+    %data_mat(5,find(data_mat(14,:))) = 0;
+    %data_mat(6,find(data_mat(14,:))) = 0;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Check if new trial - if so chunck and save data_mat
@@ -108,12 +108,18 @@ if isempty(varLog) == 0 && update_display_on == 1
     else % new trial found at first ind
         data = [trial_info.data_mat data_mat(:,1:ind-1)];
         trial_info.data_mat = data_mat(:,ind:end);
+        data(20,:) = [0:size(data,2)-1]/500;
         if checkbox_log_value
-            save([handles.fname_base sprintf('trial_%04d.mat',trial_num)],'data','names');
+            %save([handles.fname_base sprintf('trial_%04d.mat',trial_num)],'data','names');
+            fid = fopen([handles.fname_base sprintf('trial-%04d.csv',trial_num)], 'w');
+            fprintf(fid, '%s,', names{1,1:end-1});
+            fprintf(fid, '%s\n', names{1,end});
+            fclose(fid);
+            dlmwrite([handles.fname_base sprintf('trial-%04d.csv',trial_num)], data', '-append');
         end
-        if get(handles.checkbox_stream_behaviour,'Value');
-           save([handles.stream_fname_base sprintf('trial_%04d.mat',trial_num)],'data','names');
-        end
+%         if get(handles.checkbox_stream_behaviour,'Value');
+%            save([handles.stream_fname_base sprintf('trial_%04d.mat',trial_num)],'data','names');
+%         end
         
         trial_num = trial_num+1;
         % clear plot

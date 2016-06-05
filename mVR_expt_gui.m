@@ -76,9 +76,9 @@ cd(rig_config.base_dir)
 
 handles.A_inv = rig_config.A_inv;
 handles.names = {'xSpeed','ySpeed','corPos','corWidth','xMazePos','yMazePos', ...
-    'screenOn','rEnd','lEnd','lickState','trialWater','extWater', ...
-    'trialType','itiPeriod','scimState','scimLogging','curBranchDist','curBranchId','trialNum'};
-handles.iti_ind = find(strcmp(handles.names,'itiPeriod'));
+    'screenOn','rEnd','lEnd','licks','reward','extWater', ...
+    'trialType','iti','frames','scimLogging','curBranchDist','curBranchId','number', 'time'};
+handles.iti_ind = find(strcmp(handles.names,'iti'));
 
 % Load trial configuration file
 load_maze_config_Callback(handles.load_maze_config, eventdata, handles);
@@ -90,8 +90,8 @@ maze_array = maze_all{2};
 
 % Configure Ball Tracker
 if strcmp(rig_config.rig_name,'Laptop') ~= 1 && strcmp(rig_config.rig_name,'Desktop') ~= 1
-    vi = configure_ball_tracker(rig_config.treadmill_str);
-    camera_metrics= start_ball_tracker(vi);
+   vi = configure_ball_tracker(rig_config.treadmill_str);
+   camera_metrics= start_ball_tracker(vi);
     % Display camera metrics
     str = sprintf('SQUAL 0 = %.2f', camera_metrics(2));
     set(handles.text_squal0,'String',str);
@@ -283,11 +283,11 @@ switch get(hObject,'value')
 
         % Enable log buttons
         set(handles.checkbox_log,'Enable','on')
-        set(handles.edit_run_number,'Enable','on')
+        %set(handles.edit_run_number,'Enable','on')
         set(handles.edit_animal_number,'Enable','on')
         set(handles.edit_date,'Enable','on')
         set(handles.load_maze_config,'Enable','on')
-        set(handles.checkbox_stream_behaviour,'Enable','on')
+        %set(handles.checkbox_stream_behaviour,'Enable','on')
 
         % Disable water buttons
         set(handles.pushbutton_water,'Enable','off')
@@ -411,18 +411,19 @@ switch get(hObject,'value')
 
         % Disable logging options
         set(handles.checkbox_log,'Enable','off')
-        set(handles.edit_run_number,'Enable','off')
+%        set(handles.edit_run_number,'Enable','off')
         set(handles.edit_animal_number,'Enable','off')
         set(handles.edit_date,'Enable','off')
         set(handles.load_maze_config,'Enable','off')
-        set(handles.checkbox_stream_behaviour,'Enable','off')
+        %set(handles.checkbox_stream_behaviour,'Enable','off')
 
 
         % Create folder names
         str_date = get(handles.edit_date,'String');
         str_animal_number = get(handles.edit_animal_number,'String');
-        str_run_number = get(handles.edit_run_number,'String');
-        folder_name = fullfile(rig_config.data_dir,['anm_0' str_animal_number],['20' str_date(1:2) '_' str_date(3:4) '_' str_date(5:6)],['run_' str_run_number],'behaviour');
+        %str_run_number = get(handles.edit_run_number,'String');
+        %folder_name = fullfile(rig_config.data_dir,['anm_0' str_animal_number],['20' str_date(1:2) '_' str_date(3:4) '_' str_date(5:6)],['run_' str_run_number],'behaviour');
+        folder_name = fullfile(rig_config.data_dir,sprintf('%06d',str2double(str_animal_number)),'behavior');
         %file_id_name = ['anm_0',str_animal_number,'_20' str_date(1:2) 'x' str_date(3:4) 'x' str_date(5:6) '_run_',str_run_number,'_'];
         file_id_name = [filesep];
         fname_base = fullfile(folder_name,file_id_name);
@@ -432,7 +433,7 @@ switch get(hObject,'value')
         info = [];
         info.anm = str_animal_number;
         info.date = str_date;
-        info.run = str_run_number;
+%        info.run = str_run_number;
         
        
         % Get globals file name
@@ -497,19 +498,19 @@ switch get(hObject,'value')
         end
         
         % If streaming behaviour to non local source 
-        if get(handles.checkbox_stream_behaviour,'Value')
-            stream_folder_name = fullfile(rig_config.accesory_path,['anm_0' str_animal_number],['20' str_date(1:2) '_' str_date(3:4) '_' str_date(5:6)],['run_' str_run_number],'behaviour');
-            stream_fname_base = fullfile(stream_folder_name,file_id_name);
-            if exist(stream_folder_name) ~= 7
-                mkdir(stream_folder_name);
-            end
-            stream_fname_globals = [stream_fname_base rig_config.globals_name];
-            handles.stream_fname_base = stream_fname_base;
-            copyfile(fileOut,stream_fname_globals);
-            save([stream_fname_base 'rig_config.mat'],'rig_config');
-            save([stream_fname_base 'trial_config.mat'],'maze_config','maze_array','trial_vars');
-            save([stream_fname_base 'info.mat'],'info');
-        end
+%         if get(handles.checkbox_stream_behaviour,'Value')
+%             %stream_folder_name = fullfile(rig_config.accesory_path,['anm_0' str_animal_number],['20' str_date(1:2) '_' str_date(3:4) '_' str_date(5:6)],['run_' str_run_number],'behaviour');
+%             %stream_fname_base = fullfile(stream_folder_name,file_id_name);
+%             %if exist(stream_folder_name) ~= 7
+%             %    mkdir(stream_folder_name);
+%             %end
+%             %stream_fname_globals = [stream_fname_base rig_config.globals_name];
+%             %handles.stream_fname_base = stream_fname_base;
+%             copyfile(fileOut,stream_fname_globals);
+%             save([stream_fname_base 'rig_config.mat'],'rig_config');
+%             save([stream_fname_base 'trial_config.mat'],'maze_config','maze_array','trial_vars');
+%             save([stream_fname_base 'info.mat'],'info');
+%         end
 
 
 
@@ -672,6 +673,7 @@ function edit_animal_number_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_animal_number (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+set(hObject,'String',sprintf('%06d',str2double(get(hObject,'String'))))
 
 % Hints: get(hObject,'String') returns contents of edit_animal_number as text
 %        str2double(get(hObject,'String')) returns contents of edit_animal_number as a double

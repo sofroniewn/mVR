@@ -6,7 +6,7 @@
 /******************************************/
 /* TRIAL PARAMETERS SET FROM MATLAB */
 const unsigned num_mazes = 1; /* Number of mazes */
-const unsigned max_num_branches = 11; /* Max number of branches */
+const unsigned max_num_branches = 9; /* Max number of branches */
 
 const unsigned trial_random_order = 1; /* 1 if in random order, 0 if in sequence, 2 if repeat till correct */
 const unsigned trial_num_sequence_length = 0; /* 0 if random, otherwise length of sequence */
@@ -14,34 +14,34 @@ const unsigned trial_num_sequence[1] = {-1}; /* 1 if random, sequence */
 const unsigned trial_num_repeats[1] = {0}; /* 1 if random, num repeats */
 
 /* params - one per session */
-const double session_timeout = 300; /* time for trial to time out */
+const double session_timeout = 120; /* time for trial to time out */
 const double session_iti = 1; /* inter trial interal time */
 const double session_drink_time = 300; /* time to drink water before trial ends */
 const unsigned session_continuous_world = 1; /* whether to have a continuous world or not */
 
 /* params - one per maze */
-const unsigned maze_num_branches[1] = {11}; /* Number of branches for each maze */
+const unsigned maze_num_branches[1] = {9}; /* Number of branches for each maze */
 const double maze_reward_patch[1][4] = {{0.1, 0.9, 0.5, 1}}; /* Size of reward patches in this maze, l_frac, r_frac, back_dist_frac for_dist_frac */
 const double maze_reward_size[1] = {1}; /* Multiplier on reward size */
 const double maze_wall_gain[1] = {3}; /* ball wall gain */
 const double maze_center_width[1] = {15}; /* width of center */
 const double maze_screen_on_time[1] = {9999}; /* Duration screen on - if 0 then never on */
 const unsigned maze_initial_branch[1] = {0}; /* Starting branch num */
-const double maze_initial_branch_for_fraction[1] = {0.5}; /* Starting branch forward fraction */
+const double maze_initial_branch_for_fraction[1] = {0}; /* Starting branch forward fraction */
 const double maze_initial_branch_lat_fraction[1] = {0.5}; /* Starting lateral fraction */
 
 /* params - one per branch */
-const double branch_length[1][11] = {{7.5, 16.1, 21, 21, 15, 15, 16.1, 21, 16.1, 21, 7.5}}; /* Length of branch */
-const double branch_left_angle[1][11] = {{0, -25, -25, 25, 0, 0, -25, 25, -25, -25, 0}}; /* Angle of left wall */
-const double branch_right_angle[1][11] = {{0, 25, -25, 25, 0, 0, 25, 25, 25, -25, 0}}; /* Angle of right wall */
-const double branch_for_start[1][11] = {{0, 7.5, 23.6, 23.6, 44.6, 44.6, 59.6, 75.7, 59.6, 75.7, 96.7}}; /* forward start position branch, cm */
-const double branch_l_lat_start[1][11] = {{-15, -15, -37.5, 7.5, -66.9, 36.9, -66.9, -44.4, 36.9, 14.4, -15}}; /* lateral left wall start mm */
-const double branch_r_lat_start[1][11] = {{15, 15, -7.5, 37.5, -36.9, 66.9, -36.9, -14.4, 66.9, 44.4, 15}}; /* lateral right wall start mm */
-const signed branch_left_end[1][11] = {{1, 2, 4, 5, 6, 8, -1, 10, 9, 10, 0}}; /* Left maze end condition */
-const signed branch_right_end[1][11] = {{1, 3, 4, 5, 6, 8, 7, 10, -1, 10, 0}}; /* Right maze end condition */
-const unsigned branch_split[1][11] = {{0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0}}; /* If split branch or not */
-const unsigned branch_reward[1][11] = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0}}; /* If reward branch or not */
-const signed branch_parent[1][11] = {{-1, 0, 1, 1, 2, 3, 4, 6, 5, 8, 7}}; /* Parent branch id */
+const double branch_length[1][9] = {{15, 16.1, 21, 14, 15, 16.1, 21, 14, 15}}; /* Length of branch */
+const double branch_left_angle[1][9] = {{0, -25, 25, 10.1396, 0, -25, -25, 10.1471, 0}}; /* Angle of left wall */
+const double branch_right_angle[1][9] = {{0, 25, 25, -10.1396, 0, 25, -25, -10.1471, 0}}; /* Angle of right wall */
+const double branch_for_start[1][9] = {{0, 15, 31.1, 31.1, 52.1, 67.1, 83.2, 83.2, 104.2}}; /* forward start position branch, cm */
+const double branch_l_lat_start[1][9] = {{-15, -15, 7.5, -37.5, 36.9, 36.9, 14.4, 59.4, -15}}; /* lateral left wall start mm */
+const double branch_r_lat_start[1][9] = {{15, 15, 37.5, -7.5, 66.9, 66.9, 44.4, 89.4, 15}}; /* lateral right wall start mm */
+const signed branch_left_end[1][9] = {{1, 3, 4, -1, 5, 6, 8, -1, 0}}; /* Left maze end condition */
+const signed branch_right_end[1][9] = {{1, 2, 4, -1, 5, 7, 8, -1, 0}}; /* Right maze end condition */
+const unsigned branch_split[1][9] = {{0, 1, 0, 0, 0, 1, 0, 0, 0}}; /* If split branch or not */
+const unsigned branch_reward[1][9] = {{0, 0, 0, 0, 0, 0, 1, 0, 0}}; /* If reward branch or not */
+const signed branch_parent[1][9] = {{-1, 0, 1, 1, 2, 4, 5, 5, 6}}; /* Parent branch id */
 
 /******************************************/
 /* DEFINE EXTERNAL AND INTERNAL FUNCTIONS */
@@ -82,9 +82,9 @@ const unsigned lick_in_chan = 5; /* Lick signal*/
 const unsigned scim_logging_chan = 7; /* Lick signal*/
 
 /* Analog output channels */
-const unsigned maze_num_ao_chan = 8; /* maze number */
+const unsigned maze_num_ao_chan = 5; /* maze number */
 /*const unsigned synch_ao_chan = 0; /* synch channel at 500 Hz */
-const unsigned iti_ao_chan = 5; /* AO intertrial trig  */
+const unsigned iti_ao_chan = 8; /* AO intertrial trig  */
 const unsigned l_wall_lat_ao_chan = 0; /* left wall lateral position */
 const unsigned c_wall_for_ao_chan = 3; /* left wall forward position */
 const unsigned c_wall_lat_ao_chan = 2; /* right wall lateral position */
@@ -94,9 +94,9 @@ const unsigned maze_for_ao_chan = 6; /* forward position of mouse */
 const unsigned maze_lat_ao_chan = 7; /* lateral position of mouse */
 
 /* Analog output channel offsets */
-const double maze_num_ao_offset = 0;
+const double maze_num_ao_offset = -0.12;
 /*const double synch_ao_offset = 0;*/
-const double iti_ao_offset = -0.12;
+const double iti_ao_offset = 0;
 const double l_wall_lat_ao_offset = -0.115;
 const double c_wall_for_ao_offset = -0.12;
 const double c_wall_lat_ao_offset = -0.118;
@@ -243,7 +243,7 @@ unsigned valve_time = 0;
 unsigned valve_time_ext = 0;
 unsigned ext_valve_trig = 0;
 double water_dist = 0;
-unsigned water_trig_on[11];
+unsigned water_trig_on[9];
 
 /* vars for scim sync*/
 unsigned scim_logging = 0; /* Define Scan Image Frame Clock Params */
@@ -316,10 +316,10 @@ double maze_num_to_vlt(double x) {
     if (x<0) {
         x = 0;
     }
-    if (x>20) {
-        x = 20;
+    if (x>10) {
+        x = 10;
     }
-    return x/4;
+    return x/2;
 }
 
 /***********************************/
@@ -1024,7 +1024,7 @@ void tick_func(void) {
             
             /* Check bounds and output AO for maze number */
             /* check in matlab not more than 100 mazes */
-            /*writeAO(maze_num_ao_chan, maze_num_ao_offset  + maze_num_to_vlt(cur_trial_num));*/
+            writeAO(maze_num_ao_chan, maze_num_ao_offset  + maze_num_to_vlt(cur_trial_num));
             
             /* Check water */
             if (ext_valve_trig == 1 || ((water_dist > dist_thresh) && (dist_thresh < 200))){
