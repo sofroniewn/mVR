@@ -233,7 +233,12 @@ double update_dist = 0;
 double time_frac = 0;
 double c_lat_dist;
 double maze_start_dist = 0;
-
+double d_left;
+double d_right;
+double d_end;
+double d_left_child;
+double d_right_child;
+double d_end_child;
 
 
 /* vars for water delivery*/
@@ -492,159 +497,120 @@ void tick_func(void) {
                 }
                 
                 /* update wall positions */
-                if (split_child == 1 && (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1)) {
-                    /* if in left child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos_target = -90;
-                        r_lat_pos_target = cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_lat_pos_target = cor_pos - cor_width/2 + update_dist/2;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_for_pos_target = 0;
-                        c_dead_end = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos_target = -90*(2 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos_target = cor_pos + offset_dist*(2 - cur_branch_dist/branch_compensate_dist);
-                        c_lat_pos_target = cor_pos - cor_width/2 + update_dist/2*(2 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_for_pos_target = 0;
-                        c_dead_end = 1;
-                    } else {
-                        c_ang_pos_target = 0;
-                        r_lat_pos_target = cor_pos;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2;
-                        c_for_pos_target = 0;
-                        c_dead_end = 1;
-                    }
-                } else if (split_child == 1) {
-                    /* if in left child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos_target = -90;
-                        r_lat_pos_target = cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_lat_pos_target = cor_pos - cor_width/2 + update_dist/2;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_for_pos_target = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move rotated center wall away from mouse */
-                        c_ang_pos_target = -90;
-                        r_lat_pos_target = cor_pos + offset_dist;
-                        c_lat_pos_target = cor_pos - cor_width/2 + update_dist/2;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_for_pos_target = max_wall_for_pos*(cur_branch_dist/branch_compensate_dist - 1);
-                    } else if (cur_branch_dist >= branch_compensate_dist*2 && cur_branch_dist < branch_compensate_dist*3) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos_target = -90*(3 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos_target = cor_pos + offset_dist*(3 - cur_branch_dist/branch_compensate_dist);
-                        c_lat_pos_target = cor_pos - cor_width/2 + update_dist/2*(3 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_for_pos_target = max_wall_for_pos;
-                    } else {
-                        c_ang_pos_target = 0;
-                        r_lat_pos_target = cor_pos;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2;
-                        c_for_pos_target = max_wall_for_pos;
-                    }
-                }  else if (split_child == 2 && (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1)) {
-                    /* if in right child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos_target = 90;
-                        r_lat_pos_target = cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2 - update_dist/2;
-                        l_lat_pos_target = cor_width - cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_for_pos_target = 0;
-                        c_dead_end = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos_target = 90*(2 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos_target = cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2 - update_dist/2*(2 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos_target = cor_width - cor_pos + offset_dist*(2 - cur_branch_dist/branch_compensate_dist);
-                        c_for_pos_target = 0;
-                        c_dead_end = 1;
-                    } else {
-                        c_ang_pos_target = 0;
-                        r_lat_pos_target = cor_pos;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2;
-                        c_for_pos_target = 0;
-                        c_dead_end = 1;
-                    }
-                } else if (split_child == 2) {
-                    /* if in right child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos_target = 90;
-                        r_lat_pos_target = cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2 - update_dist/2;
-                        l_lat_pos_target = cor_width - cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_for_pos_target = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move rotated center wall away from mouse */
-                        c_ang_pos_target = 90;
-                        r_lat_pos_target = cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2 - update_dist/2;
-                        l_lat_pos_target = cor_width - cor_pos + offset_dist;
-                        c_for_pos_target = max_wall_for_pos*(cur_branch_dist/branch_compensate_dist - 1);
-                    } else if (cur_branch_dist >= branch_compensate_dist*2 && cur_branch_dist < branch_compensate_dist*3) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos_target = 90*(3 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos_target = cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2 - update_dist/2*(3 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos_target = cor_width - cor_pos + offset_dist*(3 - cur_branch_dist/branch_compensate_dist);
-                        c_for_pos_target = max_wall_for_pos;
-                    } else {
-                        c_ang_pos_target = 0;
-                        r_lat_pos_target = cor_pos;
-                        l_lat_pos_target = cor_width - cor_pos;
-                        c_lat_pos_target = cor_pos - cor_width/2;
-                        c_for_pos_target = max_wall_for_pos;
-                    }
-                } else if (branch_split[cur_trial_num][cur_branch] == 1) {
+                c_ang_pos_target = 0;
+                c_lat_pos_target = 0;
+                r_lat_pos_target = cor_pos;
+                l_lat_pos_target = cor_width - cor_pos;
+
+                d_end = gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist); /*distance to end of branch*/
+                d_left = (cor_width - cor_pos)*tan(left_angle*3.141/180); /*distance to left wall*/
+                d_right = cor_pos*tan(right_angle*3.141/180); /*distance to right wall*/
+
+                if (d_right < 0){
+                    d_right = max_wall_for_pos;
+                }
+                if (d_left < 0){
+                    d_left = max_wall_for_pos;
+                }
+
+                if (branch_split[cur_trial_num][cur_branch] == 1) {
                     /* if in split branch */
-                    r_lat_pos_target = cor_pos;
-                    l_lat_pos_target = cor_width - cor_pos;
-                    c_lat_pos_target = cor_pos - cor_width/2;
-                    c_ang_pos_target = -180*c_lat_pos_target/maze_center_width[cur_trial_num];
-                    if (c_ang_pos_target > 90) {
-                        c_ang_pos_target = 90;
-                    } else if (c_ang_pos_target < -90){
-                        c_ang_pos_target = -90;
+                    c_dead_end = 0;                    
+                    if (cur_branch_lat_frac > (branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])) {
+                        /* if on left side */
+                        child_branch = branch_left_end[cur_trial_num][cur_branch];
+                        if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
+                            d_end_child = gain_val*(branch_length[cur_trial_num][child_branch]); /*distance to end of branch*/
+                        } else {
+                            d_end_child = max_wall_for_pos;
+                        }
+                        d_left_child = (cor_width - cor_pos + d_end/tan(left_angle*3.141/180))*tan(branch_left_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to left wall*/
+                        d_right_child = (cor_pos - cor_width*((branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])))*tan(branch_right_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to right wall*/
+                        if (d_right_child < 0) {
+                            d_right_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < 0) {
+                            d_left_child = max_wall_for_pos;
+                        }
+
+                        if (d_left_child < d_right_child) {
+                            d_right_child = d_left_child;
+                        }
+                        if (d_right_child < d_end_child){
+                            d_end_child = d_right_child
+                        }
+                        c_for_pos_target = d_end + d_end_child;
+                    } else if (cur_branch_lat_frac < (branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])) {                
+                        /* if on right side */
+                        child_branch = branch_right_end[cur_trial_num][cur_branch];
+                        if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
+                            d_end_child = gain_val*(branch_length[cur_trial_num][child_branch]); /*distance to end of branch*/
+                        } else {
+                            d_end_child = max_wall_for_pos;
+                        }
+                        d_left_child = (cor_width*(branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])))-cor_pos)*tan(branch_left_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to left wall*/
+                        d_right_child = (cor_pos + d_end/tan(right_angle*3.141/180))*tan(branch_right_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to right wall*/
+                        if (d_right_child < 0) {
+                            d_right_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < 0) {
+                            d_left_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < d_right_child) {
+                            d_right_child = d_left_child;
+                        }
+                        if (d_right_child < d_end_child){
+                            d_end_child = d_right_child
+                        }
+                        c_for_pos_target = d_end + d_end_child;
+                    else {
+                        /* if in middle */
+                        c_for_pos_target = d_end;
                     }
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* if close to start of branch */
-                        c_ang_pos_target = cur_branch_dist/branch_compensate_dist*c_ang_pos;
+
+                } else (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1) {
+                    /* if in dead_end */
+                    c_dead_end = 1;
+                    if (d_left < d_right) {
+                        d_right = d_left;
                     }
-                    if (gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist) < max_wall_for_pos) {
-                        /* if near end of branch */
-                        c_for_pos_target = gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist);
-                    } else {
-                        c_for_pos_target = max_wall_for_pos;
+                    if (d_right < d_end){
+                        d_end = d_right
                     }
-                } else if (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1) {
-                    /* if in dead end branch */
-                    c_ang_pos_target = 0;
-                    r_lat_pos_target = cor_pos;
-                    l_lat_pos_target = cor_width - cor_pos;
-                    c_lat_pos_target = cor_pos - cor_width/2;
-                    if (gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist) < max_wall_for_pos) {
-                        /* if near end of branch */
-                        c_for_pos_target = gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist);
-                        c_dead_end = 1;
-                    } else {
-                        c_for_pos_target = max_wall_for_pos;
-                        c_dead_end = 0;
-                    }
+                    c_for_pos_target = d_end;
                 } else {
-                    /* if in normal branch */
-                    c_ang_pos_target = 0;
-                    r_lat_pos_target = cor_pos;
-                    l_lat_pos_target = cor_width - cor_pos;
-                    c_lat_pos_target = cor_pos - cor_width/2;
+                    c_dead_end = 0;
+                    if (d_left < d_right) {
+                        d_right = d_left;
+                    }
+                    if (d_right < d_end){
+                        c_for_pos_target = d_right
+                    } else {
+                        child_branch = branch_left_end[cur_trial_num][cur_branch];
+                        if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
+                            d_end_child = gain_val*(branch_length[cur_trial_num][child_branch]); /*distance to end of branch*/
+                        } else {
+                            d_end_child = max_wall_for_pos;
+                        }
+                        d_left_child = (cor_width - cor_pos + d_end/tan(left_angle*3.141/180))*tan(branch_left_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to left wall*/
+                        d_right_child = (cor_pos + d_end/tan(right_angle*3.141/180))*tan(branch_right_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to right wall*/
+                        if (d_right_child < 0) {
+                            d_right_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < 0) {
+                            d_left_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < d_right_child) {
+                            d_right_child = d_left_child;
+                        }
+                        if (d_right_child < d_end_child){
+                            d_end_child = d_right_child
+                        }
+                        c_for_pos_target = d_end + d_end_child;
+                    }
+                }
+
+                if (c_for_pos_target > max_wall_for_pos) {
                     c_for_pos_target = max_wall_for_pos;
                 }
                 
@@ -779,160 +745,120 @@ void tick_func(void) {
                 
                 cur_branch_lat_frac = cor_pos/cor_width;
                 
-                /* update wall positions */
-                if (split_child == 1 && (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1)) {
-                    /* if in left child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos = -90;
-                        r_lat_pos = cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_lat_pos = cor_pos - cor_width/2 + update_dist/2;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_for_pos = 0;
-                        c_dead_end = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos = -90*(2 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos = cor_pos + offset_dist*(2 - cur_branch_dist/branch_compensate_dist);
-                        c_lat_pos = cor_pos - cor_width/2 + update_dist/2*(2 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos = cor_width - cor_pos;
-                        c_for_pos = 0;
-                        c_dead_end = 1;
-                    } else {
-                        c_ang_pos = 0;
-                        r_lat_pos = cor_pos;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2;
-                        c_for_pos = 0;
-                        c_dead_end = 1;
-                    }
-                } else if (split_child == 1) {
-                    /* if in left child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos = -90;
-                        r_lat_pos = cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_lat_pos = cor_pos - cor_width/2 + update_dist/2;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_for_pos = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move rotated center wall away from mouse */
-                        c_ang_pos = -90;
-                        r_lat_pos = cor_pos + offset_dist;
-                        c_lat_pos = cor_pos - cor_width/2 + update_dist/2;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_for_pos = max_wall_for_pos*(cur_branch_dist/branch_compensate_dist - 1);
-                    } else if (cur_branch_dist >= branch_compensate_dist*2 && cur_branch_dist < branch_compensate_dist*3) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos = -90*(3 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos = cor_pos + offset_dist*(3 - cur_branch_dist/branch_compensate_dist);
-                        c_lat_pos = cor_pos - cor_width/2 + update_dist/2*(3 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos = cor_width - cor_pos;
-                        c_for_pos = max_wall_for_pos;
-                    } else {
-                        c_ang_pos = 0;
-                        r_lat_pos = cor_pos;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2;
-                        c_for_pos = max_wall_for_pos;
-                    }
-                } else if (split_child == 2 && (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1)) {
-                    /* if in right child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos = 90;
-                        r_lat_pos = cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2 - update_dist/2;
-                        l_lat_pos = cor_width - cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_for_pos = 0;
-                        c_dead_end = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos = 90*(2 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos = cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2 - update_dist/2*(2 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos = cor_width - cor_pos + offset_dist*(2 - cur_branch_dist/branch_compensate_dist);
-                        c_for_pos = 0;
-                        c_dead_end = 1;
-                    } else {
-                        c_ang_pos = 0;
-                        r_lat_pos = cor_pos;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2;
-                        c_for_pos = 0;
-                        c_dead_end = 1;
-                    }
-                } else if (split_child == 2) {
-                    /* if in right child of split branch */
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* move far lateral wall in behind rotated center wall */
-                        c_ang_pos = 90;
-                        r_lat_pos = cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2 - update_dist/2;
-                        l_lat_pos = cor_width - cor_pos + update_dist*(1-cur_branch_dist/branch_compensate_dist)+offset_dist*cur_branch_dist/branch_compensate_dist;
-                        c_for_pos = 0;
-                    } else if (cur_branch_dist >= branch_compensate_dist && cur_branch_dist < branch_compensate_dist*2) {
-                        /* move rotated center wall away from mouse */
-                        c_ang_pos = 90;
-                        r_lat_pos = cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2 - update_dist/2;
-                        l_lat_pos = cor_width - cor_pos + offset_dist;
-                        c_for_pos = max_wall_for_pos*(cur_branch_dist/branch_compensate_dist - 1);
-                    } else if (cur_branch_dist >= branch_compensate_dist*2 && cur_branch_dist < branch_compensate_dist*3) {
-                        /* move center wall back to center, rotate center wall back to straight and move in lateral wall*/
-                        c_ang_pos = 90*(3 - cur_branch_dist/branch_compensate_dist);
-                        r_lat_pos = cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2 - update_dist/2*(3 - cur_branch_dist/branch_compensate_dist);
-                        l_lat_pos = cor_width - cor_pos + offset_dist*(3 - cur_branch_dist/branch_compensate_dist);
-                        c_for_pos = max_wall_for_pos;
-                    } else {
-                        c_ang_pos = 0;
-                        r_lat_pos = cor_pos;
-                        l_lat_pos = cor_width - cor_pos;
-                        c_lat_pos = cor_pos - cor_width/2;
-                        c_for_pos = max_wall_for_pos;
-                    }
-                } else if (branch_split[cur_trial_num][cur_branch] == 1) {
+                c_ang_pos = 0;
+                c_lat_pos = 0;
+                r_lat_pos = cor_pos;
+                l_lat_pos = cor_width - cor_pos;
+
+                d_end = gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist); /*distance to end of branch*/
+                d_left = (cor_width - cor_pos)*tan(left_angle*3.141/180); /*distance to left wall*/
+                d_right = cor_pos*tan(right_angle*3.141/180); /*distance to right wall*/
+
+                if (d_right < 0){
+                    d_right = max_wall_for_pos;
+                }
+                if (d_left < 0){
+                    d_left = max_wall_for_pos;
+                }
+
+                if (branch_split[cur_trial_num][cur_branch] == 1) {
                     /* if in split branch */
-                    r_lat_pos = cor_pos;
-                    l_lat_pos = cor_width - cor_pos;
-                    c_lat_pos = cor_pos - cor_width/2;
-                    c_ang_pos = -180*c_lat_pos/maze_center_width[cur_trial_num];
-                    if (c_ang_pos > 90) {
-                        c_ang_pos = 90;
-                    } else if (c_ang_pos < -90){
-                        c_ang_pos = -90;
+                    c_dead_end = 0;                    
+                    if (cur_branch_lat_frac > (branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])) {
+                        /* if on left side */
+                        child_branch = branch_left_end[cur_trial_num][cur_branch];
+                        if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
+                            d_end_child = gain_val*(branch_length[cur_trial_num][child_branch]); /*distance to end of branch*/
+                        } else {
+                            d_end_child = max_wall_for_pos;
+                        }
+                        d_left_child = (cor_width - cor_pos + d_end/tan(left_angle*3.141/180))*tan(branch_left_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to left wall*/
+                        d_right_child = (cor_pos - cor_width*((branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])))*tan(branch_right_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to right wall*/
+                        if (d_right_child < 0) {
+                            d_right_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < 0) {
+                            d_left_child = max_wall_for_pos;
+                        }
+
+                        if (d_left_child < d_right_child) {
+                            d_right_child = d_left_child;
+                        }
+                        if (d_right_child < d_end_child){
+                            d_end_child = d_right_child
+                        }
+                        c_for_pos = d_end + d_end_child;
+                    } else if (cur_branch_lat_frac < (branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])) {                
+                        /* if on right side */
+                        child_branch = branch_right_end[cur_trial_num][cur_branch];
+                        if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
+                            d_end_child = gain_val*(branch_length[cur_trial_num][child_branch]); /*distance to end of branch*/
+                        } else {
+                            d_end_child = max_wall_for_pos;
+                        }
+                        d_left_child = (cor_width*(branch_r_lat_start[cur_trial_num][cur_branch] - branch_l_lat_start[cur_trial_num][cur_branch])/(2*branch_r_lat_start[cur_trial_num][cur_branch] - 2*branch_l_lat_start[cur_trial_num][cur_branch] + maze_center_width[cur_trial_num])))-cor_pos)*tan(branch_left_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to left wall*/
+                        d_right_child = (cor_pos + d_end/tan(right_angle*3.141/180))*tan(branch_right_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to right wall*/
+                        if (d_right_child < 0) {
+                            d_right_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < 0) {
+                            d_left_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < d_right_child) {
+                            d_right_child = d_left_child;
+                        }
+                        if (d_right_child < d_end_child){
+                            d_end_child = d_right_child
+                        }
+                        c_for_pos = d_end + d_end_child;
+                    else {
+                        /* if in middle */
+                        c_for_pos = d_end;
                     }
-                    if (cur_branch_dist < branch_compensate_dist) {
-                        /* if close to start of branch */
-                        c_ang_pos = cur_branch_dist/branch_compensate_dist*c_ang_pos;
+
+                } else (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1) {
+                    /* if in dead_end */
+                    c_dead_end = 1;
+                    if (d_left < d_right) {
+                        d_right = d_left;
                     }
-                    if (gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist) < max_wall_for_pos) {
-                        /* if near end of branch */
-                        c_for_pos = gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist);
-                    } else {
-                        c_for_pos = max_wall_for_pos;
+                    if (d_right < d_end){
+                        d_end = d_right
                     }
-                } else if (branch_left_end[cur_trial_num][cur_branch] == -1 ||  branch_right_end[cur_trial_num][cur_branch] == -1) {
-                    /* if in dead end branch */
-                    c_ang_pos = 0;
-                    r_lat_pos = cor_pos;
-                    l_lat_pos = cor_width - cor_pos;
-                    c_lat_pos = cor_pos - cor_width/2;
-                    if (gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist) < max_wall_for_pos) {
-                        /* if near end of branch */
-                        c_for_pos = gain_val*(branch_length[cur_trial_num][cur_branch] - cur_branch_dist);
-                        c_dead_end = 1;
-                    } else {
-                        c_for_pos = max_wall_for_pos;
-                        c_dead_end = 0;
-                    }
+                    c_for_pos = d_end;
                 } else {
-                    /* if in normal branch */
-                    c_ang_pos = 0;
-                    r_lat_pos = cor_pos;
-                    l_lat_pos = cor_width - cor_pos;
-                    c_lat_pos = cor_pos - cor_width/2;
+                    c_dead_end = 0;
+                    if (d_left < d_right) {
+                        d_right = d_left;
+                    }
+                    if (d_right < d_end){
+                        c_for_pos = d_right
+                    } else {
+                        child_branch = branch_left_end[cur_trial_num][cur_branch];
+                        if (branch_left_end[cur_trial_num][child_branch] == -1 ||  branch_right_end[cur_trial_num][child_branch] == -1) {
+                            d_end_child = gain_val*(branch_length[cur_trial_num][child_branch]); /*distance to end of branch*/
+                        } else {
+                            d_end_child = max_wall_for_pos;
+                        }
+                        d_left_child = (cor_width - cor_pos + d_end/tan(left_angle*3.141/180))*tan(branch_left_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to left wall*/
+                        d_right_child = (cor_pos + d_end/tan(right_angle*3.141/180))*tan(branch_right_angle[cur_trial_num][cur_branch]*3.141/180); /*distance to right wall*/
+                        if (d_right_child < 0) {
+                            d_right_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < 0) {
+                            d_left_child = max_wall_for_pos;
+                        }
+                        if (d_left_child < d_right_child) {
+                            d_right_child = d_left_child;
+                        }
+                        if (d_right_child < d_end_child){
+                            d_end_child = d_right_child
+                        }
+                        c_for_pos = d_end + d_end_child;
+                    }
+                }
+
+                if (c_for_pos > max_wall_for_pos) {
                     c_for_pos = max_wall_for_pos;
                 }
                 
