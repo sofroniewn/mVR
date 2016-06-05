@@ -316,10 +316,10 @@ double maze_num_to_vlt(double x) {
     if (x<0) {
         x = 0;
     }
-    if (x>20) {
-        x = 20;
+    if (x>10) {
+        x = 10;
     }
-    return x/4;
+    return x/2;
 }
 
 /***********************************/
@@ -1024,7 +1024,7 @@ void tick_func(void) {
             
             /* Check bounds and output AO for maze number */
             /* check in matlab not more than 100 mazes */
-            /*writeAO(maze_num_ao_chan, maze_num_ao_offset  + maze_num_to_vlt(cur_trial_num));*/
+            writeAO(maze_num_ao_chan, maze_num_ao_offset  + maze_num_to_vlt(cur_trial_num));
             
             /* Check water */
             if (ext_valve_trig == 1 || ((water_dist > dist_thresh) && (dist_thresh < 200))){

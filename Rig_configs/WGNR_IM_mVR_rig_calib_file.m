@@ -5,13 +5,13 @@
 % Parameters for WGNR GUI
 rig_config.rig_name = 'Imaging_rig'; % BASE DIRECTORY
 rig_config.rig_room = 'JFRC_2W.333'; % BASE DIRECTORY
-rig_config.base_dir = 'E:\Documents and Settings\user\My Documents\MATLAB\code\wgnr\behaviour\mVR_GUI'; % BASE DIRECTORY
+rig_config.base_dir = 'C:\Users\labadmin\Documents\GitHub\mVR'; % BASE DIRECTORY
 rig_config.comp_ip_address = '10.102.32.54'; % COMPUTER IP ADDRESS
 rig_config.globals_name = 'globals_mVR.c'; % base globals file
 rig_config.treadmill_str = 'treadmill4';
-rig_config.data_dir = 'E:\Documents and Settings\user\My Documents\mVR_DATA'; % DATA DIRECTORY
+rig_config.data_dir = 'F:\mVR_DATA'; % DATA DIRECTORY
 rig_config.TCP_IP_address = '10.102.22.49';
-rig_config.accesory_path = 'X:\Nick\mVR_DATA';
+rig_config.accesory_path = 'F:\mVR_DATA';
 rig_config.screenComPort = '/dev/tty.usbmodem1411';
 
 
@@ -29,10 +29,10 @@ rig_config.ao_channels_r_wall_lat = '1';
 rig_config.ao_channels_c_wall_lat = '2';
 rig_config.ao_channels_c_wall_for = '3';
 rig_config.ao_channels_c_wall_rot = '4';
-rig_config.ao_channels_iti = '5';
+rig_config.ao_channels_iti = '8';
 rig_config.ao_channels_maze_for = '6';
 rig_config.ao_channels_maze_lat = '7';
-rig_config.ao_channels_maze_num = '8';
+rig_config.ao_channels_maze_num = '5';
 
 % AO offset values
 rig_config.ao_offsets = [-0.115; -0.113; -0.118; -0.120; -0.121; -0.120; -0.115; -0.115; 0];

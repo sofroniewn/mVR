@@ -29,7 +29,7 @@ else
     maze_config.trial_num_sequence = 0;
     maze_config.trial_num_repeats = 0;
 end
-maze_config.session_timeout = load_dat.trial_vars.session_timeout;
+maze_config.session_timeout = 120; %load_dat.trial_vars.session_timeout;
 maze_config.session_iti = load_dat.trial_vars.session_iti;
 maze_config.session_drink_time = load_dat.trial_vars.session_drink_time;
 maze_config.session_continuous_world = load_dat.trial_vars.session_continuous_trials;
@@ -62,7 +62,7 @@ for ij = 1:num_mazes
 end
 maze_config.maze_initial_branch_for_fraction = NaN(num_mazes,1);
 for ij = 1:num_mazes
-    maze_config.maze_initial_branch_for_fraction(ij) = maze_array{ij}.initial.branch_fraction;
+    maze_config.maze_initial_branch_for_fraction(ij) = 0; %maze_array{ij}.initial.branch_fraction;
 end
 maze_config.maze_initial_branch_lat_fraction = NaN(num_mazes,1);
 for ij = 1:num_mazes
