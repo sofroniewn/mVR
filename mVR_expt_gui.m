@@ -68,6 +68,9 @@ set(handles.rig_calib_file,'String',FileName);
 run([PathName,FileName]);
 set(hObject,'UserData',rig_config);
 
+sessionsSaved = dir(rig_config.data_dir);
+set(handles.edit_animal_number,'String', sprintf('%06d',str2double(sessionsSaved(end).name)+1));
+
 cd(rig_config.base_dir)
 % addpath(fullfile('.','accessory_fns'));
 % addpath(fullfile('.','accessory_fns','plot_functions'));
