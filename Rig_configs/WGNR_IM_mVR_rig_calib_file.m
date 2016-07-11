@@ -29,9 +29,9 @@ rig_config.ao_channels_r_wall_lat = '1';
 rig_config.ao_channels_c_wall_lat = '2';
 rig_config.ao_channels_c_wall_for = '3';
 rig_config.ao_channels_c_wall_rot = '4';
-rig_config.ao_channels_iti = '8';
+rig_config.ao_channels_iti = '7';
 rig_config.ao_channels_maze_for = '6';
-rig_config.ao_channels_maze_lat = '7';
+rig_config.ao_channels_maze_lat = '8';
 rig_config.ao_channels_maze_num = '5';
 
 % AO offset values
@@ -52,7 +52,8 @@ rig_config.dio_trial_ephys_trig = '8';
 % Ball tracker calibration values
 %rig_config.A_calib_str = '{{-0.1331, -7.7882, 0.1671, 0.0856}, {0.1133, 0.1117, 0.2213, 8.1600}, {-4.0722, 0, -4.4783, 0}}'; % Ball motion calibration matrix
 rig_config.A_calib_str = '{{0, 5.5, 0, 0}, {0, 0, 0, 5.5}, {-2.75, 0, -2.75, 0}}';
-rig_config.zero_V_str = '{2.538, 2.542, 2.554, 2.538}';
+%rig_config.zero_V_str = '{2.538, 2.542, 2.554, 2.538}';
+rig_config.zero_V_str = '{2.610, 2.616, 2.626, 2.612}';
 rig_config.step_V = 0.154;
 
 % General parameters

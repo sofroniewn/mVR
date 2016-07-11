@@ -5,8 +5,8 @@
 
 /******************************************/
 /* TRIAL PARAMETERS SET FROM MATLAB */
-const unsigned num_mazes = 3; /* Number of mazes */
-const unsigned max_num_branches = 3; /* Max number of branches */
+const unsigned num_mazes = 1; /* Number of mazes */
+const unsigned max_num_branches = 7; /* Max number of branches */
 
 const unsigned trial_random_order = 1; /* 1 if in random order, 0 if in sequence, 2 if repeat till correct */
 const unsigned trial_num_sequence_length = 0; /* 0 if random, otherwise length of sequence */
@@ -14,34 +14,34 @@ const unsigned trial_num_sequence[1] = {-1}; /* 1 if random, sequence */
 const unsigned trial_num_repeats[1] = {0}; /* 1 if random, num repeats */
 
 /* params - one per session */
-const double session_timeout = 120; /* time for trial to time out */
+const double session_timeout = 30; /* time for trial to time out */
 const double session_iti = 1; /* inter trial interal time */
 const double session_drink_time = 300; /* time to drink water before trial ends */
 const unsigned session_continuous_world = 1; /* whether to have a continuous world or not */
 
 /* params - one per maze */
-const unsigned maze_num_branches[3] = {3, 3, 3}; /* Number of branches for each maze */
-const double maze_reward_patch[3][4] = {{0.1, 0.9, 0.5, 1}, {0.1, 0.9, 0.5, 1}, {0.1, 0.9, 0.5, 1}}; /* Size of reward patches in this maze, l_frac, r_frac, back_dist_frac for_dist_frac */
-const double maze_reward_size[3] = {1, 1, 1}; /* Multiplier on reward size */
-const double maze_wall_gain[3] = {3, 3, 3}; /* ball wall gain */
-const double maze_center_width[3] = {15, 15, 15}; /* width of center */
-const double maze_screen_on_time[3] = {9999, 9999, 9999}; /* Duration screen on - if 0 then never on */
-const unsigned maze_initial_branch[3] = {0, 0, 0}; /* Starting branch num */
-const double maze_initial_branch_for_fraction[3] = {0, 0, 0}; /* Starting branch forward fraction */
-const double maze_initial_branch_lat_fraction[3] = {0.5, 0.5, 0.5}; /* Starting lateral fraction */
+const unsigned maze_num_branches[1] = {7}; /* Number of branches for each maze */
+const double maze_reward_patch[1][4] = {{0.1, 0.9, 0.5, 1}}; /* Size of reward patches in this maze, l_frac, r_frac, back_dist_frac for_dist_frac */
+const double maze_reward_size[1] = {1}; /* Multiplier on reward size */
+const double maze_wall_gain[1] = {3}; /* ball wall gain */
+const double maze_center_width[1] = {15}; /* width of center */
+const double maze_screen_on_time[1] = {9999}; /* Duration screen on - if 0 then never on */
+const unsigned maze_initial_branch[1] = {0}; /* Starting branch num */
+const double maze_initial_branch_for_fraction[1] = {0}; /* Starting branch forward fraction */
+const double maze_initial_branch_lat_fraction[1] = {0.5}; /* Starting lateral fraction */
 
 /* params - one per branch */
-const double branch_length[3][3] = {{15, 21, 15}, {15, 21, 15}, {15, 21, 15}}; /* Length of branch */
-const double branch_left_angle[3][3] = {{0, 0, 0}, {0, -25, 0}, {0, 25, 0}}; /* Angle of left wall */
-const double branch_right_angle[3][3] = {{0, 0, 0}, {0, -25, 0}, {0, 25, 0}}; /* Angle of right wall */
-const double branch_for_start[3][3] = {{0, 15, 36}, {0, 15, 36}, {0, 15, 36}}; /* forward start position branch, cm */
-const double branch_l_lat_start[3][3] = {{-15, -15, -15}, {-15, -15, -44.4}, {-15, -15, 14.4}}; /* lateral left wall start mm */
-const double branch_r_lat_start[3][3] = {{15, 15, 15}, {15, 15, -14.4}, {15, 15, 44.4}}; /* lateral right wall start mm */
-const signed branch_left_end[3][3] = {{1, 2, 0}, {1, 2, 0}, {1, 2, 0}}; /* Left maze end condition */
-const signed branch_right_end[3][3] = {{1, 2, 0}, {1, 2, 0}, {1, 2, 0}}; /* Right maze end condition */
-const unsigned branch_split[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}; /* If split branch or not */
-const unsigned branch_reward[3][3] = {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}}; /* If reward branch or not */
-const signed branch_parent[3][3] = {{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}}; /* Parent branch id */
+const double branch_length[1][7] = {{15, 16.1, 21, 21, 15, 5, 10}}; /* Length of branch */
+const double branch_left_angle[1][7] = {{0, -25, -25, 25, 0, 0, 14.0566}}; /* Angle of left wall */
+const double branch_right_angle[1][7] = {{0, 25, -25, 25, 0, 0, -14.0566}}; /* Angle of right wall */
+const double branch_for_start[1][7] = {{0, 15, 31.1, 31.1, 52.1, 52.1, 57.1}}; /* forward start position branch, cm */
+const double branch_l_lat_start[1][7] = {{-15, -15, -37.5, 7.5, -66.9, 36.9, 36.9}}; /* lateral left wall start mm */
+const double branch_r_lat_start[1][7] = {{15, 15, -7.5, 37.5, -36.9, 66.9, 66.9}}; /* lateral right wall start mm */
+const signed branch_left_end[1][7] = {{1, 2, 4, 5, 0, 6, -1}}; /* Left maze end condition */
+const signed branch_right_end[1][7] = {{1, 3, 4, 5, 0, 6, -1}}; /* Right maze end condition */
+const unsigned branch_split[1][7] = {{0, 1, 0, 0, 0, 0, 0}}; /* If split branch or not */
+const unsigned branch_reward[1][7] = {{0, 0, 1, 0, 0, 0, 0}}; /* If reward branch or not */
+const signed branch_parent[1][7] = {{-1, 0, 1, 1, 2, 3, 5}}; /* Parent branch id */
 
 /******************************************/
 /* DEFINE EXTERNAL AND INTERNAL FUNCTIONS */
@@ -120,7 +120,7 @@ const unsigned sound_cue_trig = 7;
 /***************************************/
 /* DEFINE CONSTANTS */
 /* Convert to steps params */
-const double zero_V[4] =  {2.538, 2.542, 2.554, 2.538};
+const double zero_V[4] =  {2.610, 2.616, 2.626, 2.612};
 const double step_V =  0.154;
 const double A_calib[3][4] =  {{0, 5.5, 0, 0}, {0, 0, 0, 5.5}, {-2.75, 0, -2.75, 0}};
 
@@ -243,7 +243,7 @@ unsigned valve_time = 0;
 unsigned valve_time_ext = 0;
 unsigned ext_valve_trig = 0;
 double water_dist = 0;
-unsigned water_trig_on[3];
+unsigned water_trig_on[7];
 
 /* vars for scim sync*/
 unsigned scim_logging = 0; /* Define Scan Image Frame Clock Params */
@@ -428,7 +428,7 @@ void tick_func(void) {
                         cur_trial_num = cur_trial_num;
                     }
                 } else {
-                    cur_trial_num = trial_num_sequence[cur_trial_block]-1;
+                    cur_trial_num = trial_num_sequence[cur_trial_block];
                     cur_trial_repeat++;
                     if (cur_trial_repeat >= trial_num_repeats[cur_trial_block]){
                         cur_trial_block++;

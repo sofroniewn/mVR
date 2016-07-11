@@ -428,7 +428,7 @@ void tick_func(void) {
                         cur_trial_num = cur_trial_num;
                     }
                 } else {
-                    cur_trial_num = trial_num_sequence[cur_trial_block]-1;
+                    cur_trial_num = trial_num_sequence[cur_trial_block];
                     cur_trial_repeat++;
                     if (cur_trial_repeat >= trial_num_repeats[cur_trial_block]){
                         cur_trial_block++;
