@@ -84,26 +84,26 @@ const unsigned scim_logging_chan = 7; /* Lick signal*/
 /* Analog output channels */
 const unsigned maze_num_ao_chan = 5; /* maze number */
 /*const unsigned synch_ao_chan = 0; /* synch channel at 500 Hz */
-const unsigned iti_ao_chan = 8; /* AO intertrial trig  */
+const unsigned iti_ao_chan = 7; /* AO intertrial trig  */
 const unsigned l_wall_lat_ao_chan = 0; /* left wall lateral position */
 const unsigned c_wall_for_ao_chan = 3; /* left wall forward position */
 const unsigned c_wall_lat_ao_chan = 2; /* right wall lateral position */
 const unsigned r_wall_lat_ao_chan = 1; /* right wall lateral position */
 const unsigned c_wall_rot_ao_chan = 4; /* synch channel at 500 Hz */
 const unsigned maze_for_ao_chan = 6; /* forward position of mouse */
-const unsigned maze_lat_ao_chan = 7; /* lateral position of mouse */
+const unsigned maze_lat_ao_chan = 8; /* lateral position of mouse */
 
 /* Analog output channel offsets */
 const double maze_num_ao_offset = -0.12;
 /*const double synch_ao_offset = 0;*/
-const double iti_ao_offset = 0;
+const double iti_ao_offset = -0.115;
 const double l_wall_lat_ao_offset = -0.115;
 const double c_wall_for_ao_offset = -0.12;
 const double c_wall_lat_ao_offset = -0.118;
 const double r_wall_lat_ao_offset = -0.113;
 const double c_wall_rot_ao_offset = -0.121;
 const double maze_for_ao_offset = 0;
-const double maze_lat_ao_offset = -0.115;
+const double maze_lat_ao_offset = 0;
 
 /* Digital output channels */
 const unsigned water_valve_trig = 0; /* Water valve trigger */
